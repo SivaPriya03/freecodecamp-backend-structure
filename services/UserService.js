@@ -1,5 +1,6 @@
 const { User } = require('../models');
-const { convertDateToStr } = require('../utils');
+const { convertDateToStr, convertStrToDate } = require('../utils');
+const { getQueries } = require('../utils/query');
 class UserService{
     constructor(){
         this.model = User;
@@ -24,19 +25,22 @@ class UserService{
         const { description, duration, date } = data;
         const id = data[':_id'];
         const user = await this.model.findById(id);
-        const userLogs = await user.logs.create({ description, duration, date: new Date(date) });
-
+        user.log.push({ description, duration, date: new Date(date) });
+        const logs = await user.save();
         return { 
             _id: id, 
             username: user.username,
-            date: convertDateToStr(userLogs.date),
-            duration: userLogs.duration, 
-            description: userLogs.description
+            date: convertDateToStr(date),
+            duration: duration, 
+            description: description
         };
     }
 
-    async getUserLogs(query = {}){
-        
+    async getUserLogs(query = {}, userId){
+        const queries = getQueries(query, userId);
+        const [ user ] = await this.model.aggregate(queries, 'username log');
+        const { _id, username, log = [] } = user;
+        return { _id, username, count: log.length, log: log.map(ele => ({ ...ele , date: convertDateToStr(ele.date) })) };
     }
 }
 

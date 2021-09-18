@@ -15,5 +15,5 @@ const Exercise = new Schema({
         required: true,
         default: () => new Date()
     }
-})
+}, { _id : false })
 module.exports = Exercise;

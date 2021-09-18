@@ -6,6 +6,7 @@ const User = new Schema({
         type: String,
         required: true
     },
-    logs: [Exercise]
+    log: [Exercise],
+    
 })
 module.exports = User;

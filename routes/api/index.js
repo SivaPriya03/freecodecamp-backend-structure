@@ -20,6 +20,10 @@ const configureAPI = (app) => {
         response.json(users);
     })
     
+    app.get(apiPath.USER_LOGS, async function(request, response){
+        const users = await new UserService().getUserLogs(request.query, request.params.id);
+        response.json(users);
+    })
 
 
 }
