@@ -12,6 +12,8 @@ const expressLoader = (app) => {
     configureClientPath(app);
     configureApi(app);
    
+    
+
 
 }
 module.exports = expressLoader;

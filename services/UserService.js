@@ -1,6 +1,8 @@
 const { User } = require('../models');
 const { convertDateToStr, convertStrToDate } = require('../utils');
 const { getQueries } = require('../utils/query');
+const mongoose = require('mongoose')
+
 class UserService{
     constructor(){
         this.model = User;
@@ -21,11 +23,20 @@ class UserService{
         return users;
     }
 
-    async addExercise(data){
+    async addExercise(data, id){
         const { description, duration, date } = data;
-        const id = data[':_id'];
         const user = await this.model.findById(id);
-        user.log.push({ description, duration, date: new Date(date) });
+        const value = { description, duration, date: new Date(date) };
+        if(!user){
+          console.log({ id, data });
+          return { };
+        }
+        if(user.log){
+          user.log.push(value);
+        }
+        else{
+          user.log = [value];
+         }
         const logs = await user.save();
         return { 
             _id: id, 

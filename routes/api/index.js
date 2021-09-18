@@ -16,7 +16,7 @@ const configureAPI = (app) => {
     })
 
     app.post(apiPath.USER_EXERCISE, async function(request, response){
-        const users = await new UserService().addExercise(request.body);
+        const users = await new UserService().addExercise(request.body, request.params.id);
         response.json(users);
     })
     
