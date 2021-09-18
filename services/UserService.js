@@ -26,22 +26,16 @@ class UserService{
     async addExercise(data, id){
         const { description, duration, date } = data;
         const user = await this.model.findById(id);
-        const value = { description, duration, date: new Date(date) };
-        if(!user){
-          console.log({ id, data });
-          return { };
-        }
-        if(user.log){
-          user.log.push(value);
-        }
-        else{
-          user.log = [value];
-         }
+        const dateV = new Date(date);
+        const isValidDate = dateV.toString() !== 'Invalid Date';
+        const dateVal = isValidDate ? dateV : new Date();
+        const obj = { description, duration, date: dateVal };
+        user.log.push(obj);
         const logs = await user.save();
         return { 
             _id: id, 
             username: user.username,
-            date: convertDateToStr(date),
+            date: convertDateToStr(dateVal),
             duration: duration, 
             description: description
         };
