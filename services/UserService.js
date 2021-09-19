@@ -29,14 +29,15 @@ class UserService{
         const dateV = new Date(date);
         const isValidDate = dateV.toString() !== 'Invalid Date';
         const dateVal = isValidDate ? dateV : new Date();
-        const obj = { description, duration, date: dateVal };
+        const durationVal = Number(duration);
+        const obj = { description, duration: durationVal, date: dateVal };
         user.log.push(obj);
         const logs = await user.save();
         return { 
             _id: id, 
             username: user.username,
             date: convertDateToStr(dateVal),
-            duration: duration, 
+            duration: durationVal, 
             description: description
         };
     }
